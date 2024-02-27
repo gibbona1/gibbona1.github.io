@@ -1,4 +1,5 @@
 # gibbona1.github.io
+<link href="{{ 'style.css' | relative_url }}" rel="stylesheet">
 
 <div class="timeline">
   <div class="container left">
