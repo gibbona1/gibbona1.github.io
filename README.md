@@ -1,5 +1,5 @@
 # gibbona1.github.io
-<link href="{{ 'style.css' | relative_url }}" rel="stylesheet">
+<link href="{{ 'style.css' | relative_url }}" type = "text/css" rel="stylesheet">
 
 <div class="timeline">
   <div class="container left">
