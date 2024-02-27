@@ -1,248 +1,103 @@
-body {
-    margin: 0;
-    padding: 0;
-    background-color: white;
-    font-family: sans-serif;
-    font-size: 16px;
-    line-height: 1.4;
-    color: #333;
+/* Timeline */
+.timeline {
+  position: relative;
+  max-width: 900px; /* Adjust the width of the timeline */
+  margin: 20px auto;
 }
 
-/* Layout */
+/* Timeline line */
+.timeline::after {
+  content: '';
+  position: absolute;
+  width: 2px; /* Width of the timeline */
+  background-color: #ddd; /* Color of the timeline */
+  top: 0;
+  bottom: 0;
+  left: 40px; /* Adjust this to move the line left or right */
+  margin-left: -1px;
+}
+
+/* Container around the content */
 .container {
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 15px;
-    padding-right: 15px;
-}
-@media (min-width: 992px) {
-    .container {
-        width: 970px;
-     }
-}
-.row {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
+  padding: 10px 40px;
+  position: relative;
+  background-color: inherit;
+  width: 100%;
 }
 
-/* Props */
-#dhead {
-    margin-top: 20px;
+/* The circles on the timeline */
+.container::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  right: auto;
+  left: 20px; /* Adjust this to move the circle left or right */
+  background-color: white;
+  border: 3px solid #ddd; /* Adjust the color of the border */
+  top: 15px;
+  border-radius: 50%;
+  z-index: 1;
 }
-#dpic {
-    grid-column: span 6;
-    text-align: right;
+
+/* Position the container to the right */
+.container {
+  left: 60px; /* Adjust this to move the text left or right */
 }
-#ddesc {
-    padding-top: 40px;
-    padding-left: 20px;
-    grid-column: span 6;
+
+/* Add arrows to the left (pointing to the right) */
+.container::before {
+  content: ' ';
+  height: 0;
+  position: absolute;
+  top: 22px;
+  width: 0;
+  z-index: 1;
+  right: auto;
+  left: 40px; /* Adjust this to move the arrow left or right */
+  border: medium solid white;
+  border-width: 10px 10px 10px 0;
+  border-color: transparent #ddd transparent transparent;
 }
-@media (max-width: 991px) {
-    #dpic {
-      grid-column: span 12;
-      text-align: center;
-    }
-    #ddesc {
-      grid-column: span 12;
-      padding-top: 20px;
-      text-align: center;
-    }
+
+/* Fix the overlap issue with earlier containers */
+.container:hover::after {
+  z-index: 2;
 }
-h1 {
-    font-size: 34px;
-    font-weight: normal;
-    padding: 0;
-    margin: 0;
+
+.date {
+  position: absolute;
+  top: -15px;
+  left: -100px; /* Adjust this to move the date left or right */
+  font-weight: bold;
 }
-h2 {
-    font-weight: normal;
-    font-style: italic;
-    color: #999;
-    font-size: 18px;
-    padding: 0;
-    margin: 5px 0 10px 0;
+
+/* Style the content */
+.content {
+  padding: 20px 30px;
+  background-color: white; /* Background color of the content blocks */
+  position: relative;
+  border-radius: 6px;
+  border-left: 3px solid #ddd; /* Border color on the left of content blocks */
 }
-@media (min-width: 992px) {
-    h2 {
-        max-width: 300px;
-    }
-}
-#dpic img {
-    width: 240px;
-    height: 240px;
-    border-radius: 120px;
-}
-.iico {
-    width: 40px;
-    height: 40px;
-}
-#demail {
-    margin-top: 10px;
-    color: #555;
-    opacity: 0;
-    transition: opacity 0.7s;
-}
-hr {
-    height: 1px;
-    background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
-    background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
-    background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
-    background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
-    padding: 0;
-    margin: 20px 0px 20px 0px;
-    border: 0;
-}
-.ico {
-    grid-column: span 1;
-    vertical-align: top;
-    border-left: 2px solid #cfcfcf;
-    position: relative;
-}
-.ico img {
-    border-radius: 5px;
+
+/* Responsive layout */
+@media screen and (max-width: 600px) {
+  .timeline::after {
+    left: 31px;
+  }
+
+  .container {
     width: 100%;
-    max-width: 80px;
-    margin-left: 10px;
-}
-.desc {
-    grid-column: span 10;
-    vertical-align: top;
-    font-size: 17px;
-    padding-left: 20px;
-    padding-bottom: 20px;
-}
-.entry {
-}
-.entry-dot {
-    position: absolute;
-    top: 0px;
-    left: -8px;
-    width: 10px;
-    height: 10px;
-    border-radius: 7px;
-    background-color: #cfcfcf;
-    border: 2px solid white;
-}
-.timespan {
-    grid-column: span 1;
-    font-size: 14px;
-    text-align: right;
-    padding-right: 5px;
-    color: #bbb;
-}
-.hassets {
-    position: relative;
-}
-@media (max-width: 991px) {
-    .hassets {
-        display: none;
-    }
-}
-.hasset {
-    position: absolute;
-    margin: 0;
-    padding: 0;
-}
-.ctitle {
-    font-size: 36px;
-    margin-bottom: 20px;
-    margin-top: 40px;
-}
-#featured-talks .row {
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
-    padding-bottom: 30px;
-}
-.card {
-    grid-column: span 3;
-    vertical-align: top;
-    background-color: #eee;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    padding: 5px;
-    background-color: white;
-    padding-bottom: 10px;
-}
-@media (max-width: 991px) {
-    .card {
-        grid-column: span 6;
-    }
-    #featured-talks .row {
-        grid-column-gap: 5px;
-        grid-row-gap: 5px;
-    }
-}
-.card img {
-    border-radius: 5px;
-    width: 100%;
-}
-.cdesc {
-    height: 30px;
-    vertical-align: top;
-    margin-bottom: 10px;
-    font-size: 15px;
-}
-@media (max-width: 768px) {
-    .cdesc {
-        font-size: 14px;
-        padding-bottom: 10px;
-    }
-}
-#pet-projects .row {
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
-}
-.project {
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
-}
-.pico {
-    float: left;
-    margin-right: 10px;
-}
-.pdesc {
-}
-.pend {
-    clear: both;
-}
-.pico img {
-    height: 80px;
-    border-radius: 5px;
-    border: 1px solid #999;
-}
-.pub {
-    font-size: 14px;
-    border-left: 4px solid #aaa;
-    padding: 2px 0px 2px 10px;
-    margin-bottom: 10px;
-}
-.pub-title {
-    display: inline;
-    color: #333;
-}
-.pub-venue {
-    display: inline;
-    color: #090;
-}
-.pub-authors {
-    display: block;
-    color: #900;
-}
-.tul {
-    text-align: center;
-    padding: 0;
-}
-.til {
-    display: inline-block;
-    padding: 3px 15px 3px 15px;
-    margin-bottom: 5px;
-}
-.tilb {
-    border-right: 1px solid #ccc;
-}
-.nodot {
-    list-style-type: none;
-    padding-left: 0;
+    padding-left: 70px;
+    padding-right: 25px;
+  }
+
+  .container::before {
+    left: 60px;
+  }
+
+  .date {
+    left: 60px;
+  }
 }
