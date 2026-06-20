@@ -1,50 +1,69 @@
-/* =========================================================
-   Theme toggle
-   ========================================================= */
+/* ── Theme ─────────────────────────────────────────────────── */
 const html = document.documentElement;
-const themeBtn = document.getElementById('themeToggle');
 
-const savedTheme = localStorage.getItem('theme') ||
+function applyTheme(theme) {
+  html.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+}
+
+function toggleTheme() {
+  applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+const saved = localStorage.getItem('theme') ||
   (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-html.setAttribute('data-theme', savedTheme);
+applyTheme(saved);
 
-themeBtn.addEventListener('click', () => {
-  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  html.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
-});
+document.getElementById('desktopThemeBtn').addEventListener('click', toggleTheme);
+document.getElementById('mobileThemeBtn').addEventListener('click', toggleTheme);
 
-/* =========================================================
-   Mobile nav
-   ========================================================= */
-const hamburger = document.getElementById('hamburger');
-const navLinks  = document.getElementById('navLinks');
+/* ── Mobile nav ────────────────────────────────────────────── */
+const hamburger   = document.getElementById('hamburger');
+const mobileDrawer = document.getElementById('mobileDrawer');
 
 hamburger.addEventListener('click', () => {
-  const open = navLinks.classList.toggle('open');
+  const open = mobileDrawer.classList.toggle('open');
   hamburger.classList.toggle('open', open);
   hamburger.setAttribute('aria-expanded', String(open));
+  mobileDrawer.setAttribute('aria-hidden', String(!open));
 });
 
-navLinks.querySelectorAll('a').forEach(a => {
+mobileDrawer.querySelectorAll('a').forEach(a => {
   a.addEventListener('click', () => {
-    navLinks.classList.remove('open');
+    mobileDrawer.classList.remove('open');
     hamburger.classList.remove('open');
     hamburger.setAttribute('aria-expanded', 'false');
+    mobileDrawer.setAttribute('aria-hidden', 'true');
   });
 });
 
-/* =========================================================
-   Scroll animations (Intersection Observer)
-   ========================================================= */
-const fadeEls = document.querySelectorAll('.fade-up');
+/* ── Sidebar nav: active section highlight ─────────────────── */
+const navItems = document.querySelectorAll('.nav-item[data-target]');
+const sections = Array.from(document.querySelectorAll('section[id]'));
 
-// Assign stagger delays per section
-document.querySelectorAll('section, footer').forEach(section => {
-  section.querySelectorAll('.fade-up').forEach((el, i) => {
-    el.style.transitionDelay = `${i * 80}ms`;
+function setActive(id) {
+  navItems.forEach(a => {
+    a.classList.toggle('active', a.dataset.target === id);
   });
-});
+}
+
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) setActive(entry.target.id);
+  });
+}, { threshold: 0.25, rootMargin: '-10% 0px -60% 0px' });
+
+sections.forEach(s => sectionObserver.observe(s));
+
+// Set first section active on load
+if (sections.length) setActive(sections[0].id);
+
+/* ── Scroll animations ─────────────────────────────────────── */
+const fadeEls = document.querySelectorAll(
+  '.entry, .pub-entry, .skill-row, .prose p, .section-label'
+);
+
+fadeEls.forEach(el => el.classList.add('fade-in'));
 
 const fadeObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -53,37 +72,13 @@ const fadeObserver = new IntersectionObserver((entries) => {
       fadeObserver.unobserve(entry.target);
     }
   });
-}, { threshold: 0.08, rootMargin: '0px 0px -48px 0px' });
+}, { threshold: 0.05 });
+
+// Small per-section stagger
+document.querySelectorAll('.section').forEach(section => {
+  section.querySelectorAll('.fade-in').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 60}ms`;
+  });
+});
 
 fadeEls.forEach(el => fadeObserver.observe(el));
-
-/* =========================================================
-   Active nav link on scroll
-   ========================================================= */
-const sections   = document.querySelectorAll('section[id], footer[id]');
-const navAnchors = document.querySelectorAll('.nav-link');
-
-const sectionObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const id = entry.target.id;
-      navAnchors.forEach(a => {
-        a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
-      });
-    }
-  });
-}, { threshold: 0.35 });
-
-sections.forEach(s => sectionObserver.observe(s));
-
-/* =========================================================
-   Nav shadow on scroll
-   ========================================================= */
-const nav = document.getElementById('nav');
-let lastY = 0;
-
-window.addEventListener('scroll', () => {
-  const y = window.scrollY;
-  nav.style.boxShadow = y > 12 ? '0 1px 20px rgba(0,0,0,0.25)' : '';
-  lastY = y;
-}, { passive: true });
