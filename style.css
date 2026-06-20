@@ -93,7 +93,10 @@ strong { color: var(--text-hi); font-weight: 600; }
   flex-direction: column;
   background: var(--bg-alt);
   border-bottom: 1px solid var(--border);
-  padding: 12px 0;
+  padding: 8px 0;
+  max-height: calc(100vh - 56px);
+  max-height: calc(100svh - 56px);
+  overflow-y: auto;
   transform: translateY(-8px);
   opacity: 0;
   pointer-events: none;
@@ -107,7 +110,7 @@ strong { color: var(--text-hi); font-weight: 600; }
 
 .drawer-link {
   display: block;
-  padding: 12px 24px;
+  padding: 10px 24px;
   color: var(--text);
   font-size: 0.9rem;
   font-weight: 500;
@@ -187,7 +190,7 @@ strong { color: var(--text-hi); font-weight: 600; }
   flex-shrink: 0;
   position: sticky;
   top: 0;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
